@@ -1,0 +1,46 @@
+body, html {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
+.container {
+    overflow: auto;
+    width: 1000px;
+    height: calc(100vh - 40px);
+    margin: 20px auto;
+    background: #2a2b28;
+    border: 3px solid #929292;
+    border-radius: 20px;
+}
+
+.log-item {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+
+.log-item[type="total-sum"] {
+    background: #bd3434;
+} 
+
+.repeat-count {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #929292;
+    font-size: 12px;
+}

@@ -103,11 +103,69 @@ let users = [
     { name: "Fake User 99", id: 99 }
 ];
 
+const container = document.getElementById('root')
+
+const addLog = (str, type, value) => {
+    const elements = document.querySelectorAll('.log-item');
+    let lastGroup = [];
+
+    for (let i = elements.length - 1; i > -1; i--) {
+        if (elements[i].attributes.type && elements[i].attributes.type.value === 'process') {
+            lastGroup.push(elements[i]);
+        } else {
+            break;
+        }
+    }
+    let addNew = true;
+    lastGroup.forEach((x) => {
+        if (x.attributes.value && +x.attributes.value.value === value) {
+            const count = x.children[2];
+            count.innerText = ++count.innerText;
+            count.style.display = 'flex';
+            addNew = false;
+            return;
+        }
+    });
+    if (!addNew) {
+        return;
+    }
+    const item = document.createElement('div');
+    item.setAttribute('type', type);
+    item.setAttribute('value', value);
+    item.classList.add('log-item');
+
+    const repeatCount = document.createElement('div');
+    repeatCount.classList.add('repeat-count');
+    repeatCount.innerText = '1';
+    repeatCount.style.display = 'none';
+
+    const text = document.createElement('div');
+    text.classList.add('log-item-info');
+    text.innerText = str;
+
+    const date = document.createElement('div');
+    date.classList.add('log-item-date');
+    date.innerText = new Date().toLocaleTimeString();
+
+    item.append(text);
+    item.append(date);
+    item.append(repeatCount);
+    container.append(item);
+
+    container.scrollTop = container.scrollHeight;
+}
+
 const getSum = (arr) => {
     return arr.reduce((buff, x) => {
         return buff + x;
     }, 0);
 }
+
+const resCallback = (res) => {
+    console.log('Total: ', res);
+    addLog('Total: ' + res, 'total-sum', res)
+}
+
 
 function processUser(id) {
     let random = (Math.floor(Math.random() * 10) + 1) * 100;
@@ -115,7 +173,7 @@ function processUser(id) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             console.log('Waited: ', random);
-
+            addLog('Waited: ' + random, 'process', random);
             resolve(id);
         }, random);
     });
@@ -149,12 +207,10 @@ function startRecursive() {
 
             startRecursive.sum.push(sum);
             console.log('Temporary sum: ' + sum);
-
+            addLog('Temporary sum: ' + sum, 'temporary-sum');
             if (users.length) {
                 startRecursive()
-                    .then(total => {
-                        console.log('Total: ', total);
-                    });
+                    .then(resCallback);
             } else {
                 const total = getSum(startRecursive.sum);
                 resolve(total);
@@ -164,6 +220,4 @@ function startRecursive() {
 }
 
 startRecursive()
-    .then(total => {
-        console.log('Total: ', total);
-    });
+    .then(resCallback);
